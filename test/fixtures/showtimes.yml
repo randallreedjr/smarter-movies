@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  url: MyString
+  time: 2014-07-26 14:37:18
+  theater_id: 
+  movie_id: 
+
+two:
+  url: MyString
+  time: 2014-07-26 14:37:18
+  theater_id: 
+  movie_id: 
