@@ -7,12 +7,13 @@ class Request < ActiveRecord::Base
 
   def geocode()
 
-    address = self.address.gsub(" ","+")
+    address = self.query_address.gsub(" ","+")
     url = "http://maps.google.com/maps/api/geocode/json?address=#{address}&sensor=false"
-    results = JSON.load(open(url))["results"][0]["geometry"]["location"]
+    results = JSON.load(open(url))["results"][0]
 
-    self.latitude =  results["lat"]
-    self.longitude = results["lng"]
+    self.formatted_address = results["formatted_address"]
+    self.latitude =  results["geometry"]["location"]["lat"]
+    self.longitude = results["geometry"]["location"]["lng"]
     self.radius = 8000
   end
 

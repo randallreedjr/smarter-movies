@@ -22,7 +22,7 @@ class RequestsController < ApplicationController
 
   private
   def request_params
-    params.require(:request).permit(:address)
+    params.require(:request).permit(:query_address)
   end
 
 end

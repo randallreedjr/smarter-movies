@@ -34,7 +34,7 @@ require 'pry'
 address = "11 Broadway"
 address.gsub!(" ","+")
 base_url = "http://maps.google.com/maps/api/geocode/json?address=#{address}&sensor=false"
-results = JSON.load(open(base_url))["results"]
+results = JSON.load(open(base_url))["results"][0]["formatted_address"]
 puts results
 
 

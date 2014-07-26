@@ -1,3 +1,4 @@
+Results for <%= @request.formatted_address %>
 <ol>
 <% @results.each_with_index do |theater, index| %>
   <li><%= "#{theater["name"]} (#{theater["rating"]})" %></li>
