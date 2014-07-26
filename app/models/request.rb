@@ -17,6 +17,17 @@ class Request < ActiveRecord::Base
     self.radius = 8000
   end
 
+  def make_theaters()
+    theaters = call_API()
+    theaters.each do |theater|
+      theater = Theater.create(name: theater["name"], rating: theater["rating"])
+      theater.save
+      request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
+      request_theater.save
+      #theater.get_info()
+    end
+  end
+
   def call_API()
     
     base_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"

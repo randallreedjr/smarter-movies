@@ -1,6 +1,6 @@
 Results for <%= @request.formatted_address %>
 <ol>
-<% @results.each_with_index do |theater, index| %>
-  <li><%= "#{theater["name"]} (#{theater["rating"]})" %></li>
+<% @theaters.each do |theater| %>
+  <li><%= "#{theater.name} #{theater.rating}" %></li>
 <% end %>
 </ol>
