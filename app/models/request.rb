@@ -19,7 +19,8 @@ class Request < ActiveRecord::Base
 
   def make_theaters()
     theaters = call_google_API()
-    theaters.each do |theater|
+    theaters["results"] += call_google_API(theaters["next_page_token"])["results"]
+    theaters["results"].each do |theater|
       theater = Theater.find_or_create_by(name: theater["name"], rating: theater["rating"])
       theater.save
       request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
@@ -28,16 +29,21 @@ class Request < ActiveRecord::Base
     end
   end
 
-  def call_google_API()
+  def call_google_API(pagetoken = "")
+    if pagetoken.empty?
+      base_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+      base_url += "?key=#{ENV['GOOGLE_API_KEY']}"
+      base_url += "&location=#{latitude},#{longitude}"
+      base_url += "&radius=#{radius}"
+      base_url += "&types=movie_theater"
+      base_url += "&opennow"
+    else
+      base_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+      base_url += "?pagetoken=#{pagetoken}"
+      base_url += "&key=#{ENV['GOOGLE_API_KEY']}"
+    end
     
-    base_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
-    base_url += "?key=#{ENV['GOOGLE_API_KEY']}"
-    base_url += "&location=#{latitude},#{longitude}"
-    base_url += "&radius=#{radius}"
-    base_url += "&types=movie_theater"
-    base_url += "&opennow"
-    
-    return JSON.load(open(base_url))["results"]
+    return JSON.load(open(base_url))
   end
 
   def make_movies()
@@ -47,16 +53,18 @@ class Request < ActiveRecord::Base
       this_movie.description ||= movie["shortDescription"]
       this_movie.save
       movie["showtimes"].each do |showtime|
-        #binding.pry unless showtime["theatre"]["name"] == "Regal Battery Park Stadium 11"
         theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
-
-        #binding.pry
-        #if theater
         request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
         request_theater.save
-        showtime = this_movie.showtimes.build(:url => showtime["ticketURI"], 
-                                           :time => showtime["dateTime"],
-                                           :theater_id => theater.id)
+        
+        showtime = Showtime.find_or_create_by(:movie_id => this_movie.id, 
+                                              :time => showtime["dateTime"],
+                                              :theater_id => theater.id)
+        showtime.url = showtime["ticketURI"]
+
+        # showtime = this_movie.showtimes.find_or_initialize_by(:url => showtime["ticketURI"], 
+        #                                    :time => showtime["dateTime"],
+        #                                    :theater_id => theater.id)
         showtime.save
         #end
       end
