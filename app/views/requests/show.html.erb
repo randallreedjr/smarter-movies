@@ -1,6 +1,11 @@
 Results for <%= @request.formatted_address %>
 <ol>
 <% @theaters.each do |theater| %>
-  <li><%= "#{theater.name} #{theater.rating}" %></li>
+  <li><%= link_to "#{theater.name} (#{theater.rating} stars)", theater %></li>
+  <ul>
+    <% theater.showtimes.each do |showtime| %>
+      <li><%= "#{showtime.time}: #{showtime.movie.title} - #{showtime.movie.description}" %></li>
+    <% end %>
+  </ul>
 <% end %>
 </ol>

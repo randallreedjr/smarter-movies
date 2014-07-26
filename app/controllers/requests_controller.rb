@@ -1,7 +1,6 @@
 class RequestsController < ApplicationController
   def index
-    @request = Request.new()
-    @results = @request.call_API()
+
   end
 
   def new
@@ -11,8 +10,9 @@ class RequestsController < ApplicationController
   def show
     @request = Request.find(params[:id])
     @theaters = Theater.joins("INNER JOIN \"request_theaters\" ON \"request_theaters\".\"theater_id\" = \"theaters\".\"id\"")
+                  .joins("INNER JOIN \"showtimes\" ON \"showtimes\".\"theater_id\" = \"theaters\".\"id\"")
                   .where("\"request_theaters\".\"request_id\" = ?", @request.id)
-                  .order("\"theaters\".\"rating\" DESC").limit(5)
+                  .order("\"theaters\".\"rating\" DESC").limit(5).distinct()
   end
 
   def create
@@ -20,7 +20,7 @@ class RequestsController < ApplicationController
     @request.geocode()
     @request.save()
     @request.make_theaters()
-
+    @request.make_movies()
     redirect_to request_path(@request)
   end
 
