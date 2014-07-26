@@ -3,8 +3,13 @@ Results for <%= @request.formatted_address %>
 <% @theaters.each do |theater| %>
   <li><%= link_to "#{theater.name} (#{theater.rating} stars)", theater %></li>
   <ul>
-    <% theater.showtimes.each do |showtime| %>
-      <li><%= "#{showtime.time}: #{showtime.movie.title} - #{showtime.movie.description}" %></li>
+    <% theater.movies.each do |movie| %>
+      <li><%= "#{movie.title} - #{movie.description}" %>
+      <ul>
+      <% movie.showtimes.each do |showtime| %>
+        <li><%= "#{showtime.time}" %></li>
+      <% end %>
+      </ul>
     <% end %>
   </ul>
 <% end %>
