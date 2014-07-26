@@ -6,8 +6,13 @@ class Request < ActiveRecord::Base
   has_many :theaters, through: :request_theaters
 
   def geocode()
-    self.latitude =  40.708815
-    self.longitude = -74.0079341
+
+    address = self.address.gsub(" ","+")
+    url = "http://maps.google.com/maps/api/geocode/json?address=#{address}&sensor=false"
+    results = JSON.load(open(url))["results"][0]["geometry"]["location"]
+
+    self.latitude =  results["lat"]
+    self.longitude = results["lng"]
     self.radius = 8000
   end
 
@@ -19,7 +24,7 @@ class Request < ActiveRecord::Base
     base_url += "&radius=#{self.radius}"
     base_url += "&types=movie_theater"
     base_url += "&opennow"
-    binding.pry
+    
     return JSON.load(open(base_url))["results"]
   end
 end
