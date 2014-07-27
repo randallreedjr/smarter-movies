@@ -89,13 +89,14 @@ class Request < ActiveRecord::Base
   def get_tomatometer(movie_title, release_year)
     movie_title.sub!(": An IMAX 3D Experience","")
     ratings = call_RT_API(movie_title)
-    binding.pry if movie_title == "Le Chef" 
+    
     if ratings["total"] == 0
       return -1
     else
       ratings["movies"].each do |rating|
-        if rating["title"] == movie_title && rating["year"] >= release_year - 1 && rating["year"] <= release_year + 1
-          return rating["ratings"]["critics_score"]
+        if rating["title"] == movie_title && rating["year"] == release_year
+          score = rating["ratings"]["critics_score"]
+          return score == -1 ? rating["ratings"]["audience_score"] : rating["ratings"]["critics_score"]
         end
       end
     end
@@ -105,13 +106,13 @@ class Request < ActiveRecord::Base
 
   def call_RT_API(movie_title)
     url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json"
-    url += "?q=#{slugify(movie_title)}&page_limit=1&page=1"
+    url += "?q=#{slugify(movie_title)}&page_limit=10&page=1"
     url += "&apikey=#{ENV['RT_API_KEY']}"
 
     return JSON.load(open(url))
   end
 
   def slugify(string)
-    string.gsub(" ","+").gsub("'","%27")
+    string.gsub(" ","+").gsub("'","%27").gsub(":","%3A")
   end
 end
