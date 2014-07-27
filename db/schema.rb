@@ -35,10 +35,10 @@ ActiveRecord::Schema.define(version: 20140726222414) do
     t.integer  "radius"
     t.float    "latitude"
     t.float    "longitude"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.string   "query_address"
     t.string   "formatted_address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "showtimes", force: true do |t|

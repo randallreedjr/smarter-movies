@@ -8,7 +8,7 @@ Results for <%= @request.formatted_address -%>
       <ul>
       <% movie.showtimes.each do |showtime| %>
         <% next if showtime.theater != theater %>
-        <li><%= link_to "#{showtime.time}", "#{showtime.url}"%> - <%= showtime.url %></li>
+        <li><%= link_to "#{showtime.time}", "#{showtime.fandango_url}"%> - <%= showtime.fandango_url %></li>
       <% end %>
       </ul>
     <% end %>
