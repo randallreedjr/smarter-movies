@@ -13,7 +13,7 @@
         <%= "(#{theater.rating} stars)" %>
       </div>
     </div>
-    <% theater.top_movies.each do |movie| %>
+    <% theater.top_three_movies.each do |movie| %>
       <div class="col-sm-4">
         <div class="panel panel-info">
           <div class="panel-heading">
@@ -40,7 +40,7 @@
               Upcoming Showtimes:
             </div>
             <div class="list-group">
-              <% movie.next_five_showtimes(theater).each do |showtime| %>
+              <% movie.next_three_showtimes(theater).each do |showtime| %>
                 <div class="list-group-item">
                   <%= showtime.readable_time %>
                   <% if showtime.fandango_url %>
