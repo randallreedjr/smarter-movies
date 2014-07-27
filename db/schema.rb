@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20140726222414) do
   end
 
   create_table "showtimes", force: true do |t|
-    t.string   "url"
+    t.string   "fandango_url"
     t.string   "time"
     t.integer  "theater_id"
     t.integer  "movie_id"
