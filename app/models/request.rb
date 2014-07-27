@@ -67,8 +67,8 @@ class Request < ActiveRecord::Base
         show = Showtime.find_or_create_by(:movie_id => this_movie.id, 
                                               :time => showtime["dateTime"],
                                               :theater_id => theater.id)
-        show.url = showtime["ticketURI"]
-        # showtime = this_movie.showtimes.find_or_initialize_by(:url => showtime["ticketURI"], 
+        show.fandango_url = showtime["ticketURI"]
+        # showtime = this_movie.showtimes.find_or_initialize_by(:fandango_url => showtime["ticketURI"], 
         #                                    :time => showtime["dateTime"],
         #                                    :theater_id => theater.id)
         show.save
