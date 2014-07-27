@@ -36,12 +36,12 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # gem 'debugger', group: [:development, :test]
 
 gem 'pg'
+gem 'pry'
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring',        group: :development
-  gem 'pry'
   # API gems
   gem 'figaro'
 end
