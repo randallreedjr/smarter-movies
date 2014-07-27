@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20140726222414) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "movies", force: true do |t|
     t.string   "title"
     t.string   "description"
@@ -28,8 +31,8 @@ ActiveRecord::Schema.define(version: 20140726222414) do
     t.datetime "updated_at"
   end
 
-  add_index "request_theaters", ["request_id"], name: "index_request_theaters_on_request_id"
-  add_index "request_theaters", ["theater_id"], name: "index_request_theaters_on_theater_id"
+  add_index "request_theaters", ["request_id"], name: "index_request_theaters_on_request_id", using: :btree
+  add_index "request_theaters", ["theater_id"], name: "index_request_theaters_on_theater_id", using: :btree
 
   create_table "requests", force: true do |t|
     t.integer  "radius"
@@ -50,8 +53,8 @@ ActiveRecord::Schema.define(version: 20140726222414) do
     t.datetime "updated_at"
   end
 
-  add_index "showtimes", ["movie_id"], name: "index_showtimes_on_movie_id"
-  add_index "showtimes", ["theater_id"], name: "index_showtimes_on_theater_id"
+  add_index "showtimes", ["movie_id"], name: "index_showtimes_on_movie_id", using: :btree
+  add_index "showtimes", ["theater_id"], name: "index_showtimes_on_theater_id", using: :btree
 
   create_table "theaters", force: true do |t|
     t.string   "name"
