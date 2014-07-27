@@ -3,12 +3,16 @@ Results for <%= @request.formatted_address -%>
 <% @theaters.each do |theater| %>
   <li><%= link_to "#{theater.name} (#{theater.rating} stars)", theater %></li>
   <ul>
-    <% theater.movies.uniq.each do |movie| %>
+    <% theater.top_movies.each do |movie| %>
       <li><%= "#{movie.tomatometer}% - #{movie.title} - #{movie.description}" %>
       <ul>
       <% movie.showtimes.each do |showtime| %>
         <% next if showtime.theater != theater %>
-        <li><%= link_to "#{showtime.time}", "#{showtime.fandango_url}"%> - <%= showtime.fandango_url %></li>
+        <li><%= "#{showtime.time}" %>
+          <% if showtime.fandango_url %>
+            - <%= link_to "Fandango", showtime.fandango_url%>
+          <% end %>
+       </li>
       <% end %>
       </ul>
     <% end %>

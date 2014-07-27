@@ -10,3 +10,4 @@ Ideas to implement
 - Upgrade to AJAX
 - ~~Sort by tomatometer, only display top 5~~
 - Improve rotten tomatoes movie title matching
+- Figure out how to cache API calls
