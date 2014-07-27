@@ -4,7 +4,7 @@ Results for <%= @request.formatted_address -%>
   <li><%= link_to "#{theater.name} (#{theater.rating} stars)", theater %></li>
   <ul>
     <% theater.movies.uniq.each do |movie| %>
-      <li><%= "#{movie.title} - #{movie.description}" %>
+      <li><%= "#{movie.tomatometer}% - #{movie.title} - #{movie.description}" %>
       <ul>
       <% movie.showtimes.each do |showtime| %>
         <% next if showtime.theater != theater %>

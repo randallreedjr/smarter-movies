@@ -49,9 +49,13 @@ class Request < ActiveRecord::Base
   def make_movies()
     movies = call_TMS_API()
     movies.each do |movie|
-      this_movie = Movie.find_or_create_by(title: movie["title"])
-      this_movie.description ||= movie["shortDescription"]
-      this_movie.save
+      this_movie = Movie.find_by(title: movie["title"])
+      if !this_movie
+        this_movie = Movie.create(title: movie["title"])
+        this_movie.tomatometer = get_tomatometer(movie["title"], movie["releaseYear"])
+        this_movie.description ||= movie["shortDescription"]
+        this_movie.save
+      end
       movie["showtimes"].each do |showtime|
         theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
         
@@ -68,25 +72,46 @@ class Request < ActiveRecord::Base
         #                                    :time => showtime["dateTime"],
         #                                    :theater_id => theater.id)
         show.save
-        #end
+        
       end
     end
   end
 
   def call_TMS_API()
-
     movie_url = "http://data.tmsapi.com/v1/movies/showings?"
     movie_url += "startDate=#{Date.today.strftime("%Y-%m-%d")}&numDays=1&"
     movie_url += "lat=#{latitude}&lng=#{longitude}&radius=#{radius/1000}&units=km&"
     movie_url += "api_key=#{ENV['TMS_API_KEY']}"
     
     return JSON.load(open(movie_url))
+  end
 
-# movie_theaters = movies[1]["showtimes"].collect do |showing|
-#   showing["theatre"]["name"]
-# end
+  def get_tomatometer(movie_title, release_year)
+    movie_title.sub!(": An IMAX 3D Experience","")
+    ratings = call_RT_API(movie_title)
+    binding.pry if movie_title == "Le Chef" 
+    if ratings["total"] == 0
+      return -1
+    else
+      ratings["movies"].each do |rating|
+        if rating["title"] == movie_title && rating["year"] >= release_year - 1 && rating["year"] <= release_year + 1
+          return rating["ratings"]["critics_score"]
+        end
+      end
+    end
+    
+    return ratings["movies"][0]["ratings"]["critics_score"]
+  end
 
+  def call_RT_API(movie_title)
+    url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json"
+    url += "?q=#{slugify(movie_title)}&page_limit=1&page=1"
+    url += "&apikey=#{ENV['RT_API_KEY']}"
 
+    return JSON.load(open(url))
+  end
 
+  def slugify(string)
+    string.gsub(" ","+").gsub("'","%27")
   end
 end
