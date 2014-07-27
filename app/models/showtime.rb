@@ -10,4 +10,8 @@ class Showtime < ActiveRecord::Base
     Time.parse(readable_time) #=> "2014-07-27 10:30:00 -0400"
   end
 
+  def upcoming?
+    to_datetime > Time.now
+  end
+
 end

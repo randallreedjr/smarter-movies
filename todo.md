@@ -12,3 +12,4 @@ Ideas to implement
 - Improve rotten tomatoes movie title matching
 - Figure out how to cache API calls
 - Better handling of 3D showtimes -- possibly via a boolean column
+- progress bar

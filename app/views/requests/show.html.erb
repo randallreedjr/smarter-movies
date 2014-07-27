@@ -1,21 +1,57 @@
-Results for <%= @request.formatted_address -%>
-<ol>
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    Results for <%= @request.formatted_address %>
+  </div>
+</div>
+<br>
+
 <% @theaters.each do |theater| %>
-  <li><%= link_to "#{theater.name} (#{theater.rating} stars)", theater %></li>
-  <ul>
+  <div class="row">
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        <%= link_to theater.name, theater %>
+        <%= "(#{theater.rating} stars)" %>
+      </div>
+    </div>
     <% theater.top_movies.each do |movie| %>
-      <li><%= "#{movie.tomatometer}% - #{movie.title} - #{movie.description}" %>
-      <ul>
-      <% movie.showtimes.each do |showtime| %>
-        <% next if showtime.theater != theater %>
-        <li><%= "#{showtime.readable_time}" %>
-          <% if showtime.fandango_url %>
-            - <%= link_to "Fandango", showtime.fandango_url%>
-          <% end %>
-       </li>
-      <% end %>
-      </ul>
+      <div class="col-sm-4">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <div class="panel-title">
+              <%= movie.title %>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div>
+              <%= movie.description %>
+            </div>
+            <br>
+            <div>
+              Rotten Tomatoes Rating: <%= movie.tomatometer %>
+              <div class="progress">
+              <% if movie.tomatometer >= 60 %>
+                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="<%= movie.tomatometer %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie.tomatometer %>%">
+                </div>
+              <% else %>
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="<%= movie.tomatometer %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie.tomatometer %>%">
+                </div>
+              <% end %>
+              </div>
+              Upcoming Showtimes:
+            </div>
+            <div class="list-group">
+              <% movie.next_five_showtimes(theater).each do |showtime| %>
+                <div class="list-group-item">
+                  <%= showtime.readable_time %>
+                  <% if showtime.fandango_url %>
+                    - <%= link_to "Fandango", showtime.fandango_url%>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </ul>
+  </div>
 <% end %>
-</ol>
