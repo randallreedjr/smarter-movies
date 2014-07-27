@@ -30,7 +30,7 @@ class Request < ActiveRecord::Base
   end
 
   def call_google_API(pagetoken = "")
-    if pagetoken.empty?
+    if pagetoken.blank?
       base_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
       base_url += "?key=#{ENV['GOOGLE_API_KEY']}"
       base_url += "&location=#{latitude},#{longitude}"
@@ -54,18 +54,20 @@ class Request < ActiveRecord::Base
       this_movie.save
       movie["showtimes"].each do |showtime|
         theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
-        request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
-        request_theater.save
         
-        showtime = Showtime.find_or_create_by(:movie_id => this_movie.id, 
+        if !RequestTheater.find_by(request_id: self.id, theater_id: theater.id)
+          request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
+          request_theater.save
+        end
+
+        show = Showtime.find_or_create_by(:movie_id => this_movie.id, 
                                               :time => showtime["dateTime"],
                                               :theater_id => theater.id)
-        showtime.url = showtime["ticketURI"]
-
+        show.url = showtime["ticketURI"]
         # showtime = this_movie.showtimes.find_or_initialize_by(:url => showtime["ticketURI"], 
         #                                    :time => showtime["dateTime"],
         #                                    :theater_id => theater.id)
-        showtime.save
+        show.save
         #end
       end
     end

@@ -1,4 +1,4 @@
-Results for <%= @request.formatted_address %>
+Results for <%= @request.formatted_address -%>
 <ol>
 <% @theaters.each do |theater| %>
   <li><%= link_to "#{theater.name} (#{theater.rating} stars)", theater %></li>
@@ -8,7 +8,7 @@ Results for <%= @request.formatted_address %>
       <ul>
       <% movie.showtimes.each do |showtime| %>
         <% next if showtime.theater != theater %>
-        <li><%= "#{showtime.time}" %></li>
+        <li><%= link_to "#{showtime.time}", "#{showtime.url}"%> - <%= showtime.url %></li>
       <% end %>
       </ul>
     <% end %>
