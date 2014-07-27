@@ -11,3 +11,4 @@ Ideas to implement
 - ~~Sort by tomatometer, only display top 5~~
 - Improve rotten tomatoes movie title matching
 - Figure out how to cache API calls
+- Better handling of 3D showtimes -- possibly via a boolean column
