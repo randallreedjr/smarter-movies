@@ -2,6 +2,6 @@ body {
   background-image: url('theater.jpg');
 }
 
-.navbar-brand {
-  color: crimson;
+.prompt {
+  max-width: 730px;
 }

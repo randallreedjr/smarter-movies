@@ -10,7 +10,14 @@
   <div class="navbar navbar-inverse">
     <div class="container">
       <div class="navbar-header">
-        <%= link_to "Pick A Plex", root_url, class: "navbar-brand" %><br>
+        <%= link_to "Pick A Plex", root_url, class: "navbar-brand" %>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li>
+            <%= link_to "About", about_path, class: "nav" %>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
