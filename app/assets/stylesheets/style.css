@@ -14,6 +14,11 @@ body {
   margin-left: 10%;
   margin-right: 10%;
   margin-top: 10%;
+  color: #fff;
+}
+
+.new_request {
+  color: #000;
 }
 
 .about {
@@ -54,11 +59,11 @@ body {
 
 #request_query_address {
   border: 5px solid black;
-font-size: 20px;
-padding: 10px;
-display: block;
-margin: 5px 0;
-width: 100%;
+  font-size: 20px;
+  padding: 10px;
+  display: block;
+  margin: 5px 0;
+  width: 100%;
 }
 
 .address {
