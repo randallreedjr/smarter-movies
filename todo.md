@@ -4,12 +4,9 @@ Ideas to implement
 - Heroku time/only displaying one showtime
 - Only show theaters with movies (requests/2)
 - Create theater show page with google map (Chris)
-- Add image to homepage background (Randall)
-- Add style to homepage
-- About page (Randall)
 - Add rotten tomatoes sprites to movies
 - Better handling of 3D/IMAX showtimes -- possibly via a boolean column
-- Better date/time, timezone based on address
+- Better date/time, timezone based on address?
 - Make everything faster
 - Logo at top of page
 - progress bar (loading results)
@@ -26,3 +23,6 @@ Ideas to implement
 - ~~Sort by tomatometer, only display top 3~~
 - ~~Pull movie ratings from rotten tomatoes api~~
 - ~~Add bootstrap basic style to webpage~~
+- ~~Add image to homepage background (Randall)~~
+- ~~Add style to homepage~~
+- ~~About page (Randall)~~
