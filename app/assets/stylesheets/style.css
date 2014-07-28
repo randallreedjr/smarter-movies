@@ -5,3 +5,39 @@ body {
 .prompt {
   max-width: 730px;
 }
+
+.about {
+  background-color:#fff;
+  height: 350px;
+  width: 40%;
+  padding: 10px;
+}
+
+.left-about {
+  float: left;
+  margin-left: 10%;
+}
+
+.right-about {
+  float: right;
+  margin-left: 10%;
+}
+
+.bio {
+  margin: 5px;
+  border: #ccc 3px solid;
+  border-radius: 5px;
+  padding: 5px;
+  display: inline-block;
+  background-color: #fff;
+  color: #333;
+}
+
+.about-text {
+  text-align: justify;
+  text-indent: 20px;
+}
+
+.center {
+  text-align: center;
+}
