@@ -21,9 +21,11 @@ class Request < ActiveRecord::Base
     theaters = call_google_API()
     theaters["results"] += call_google_API(theaters["next_page_token"])["results"]
     theaters["results"].each do |theater|
-      theater = Theater.find_or_create_by(name: theater["name"], rating: theater["rating"])
-      theater.save
-      request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
+      cinema = Theater.find_or_create_by(name: theater["name"], rating: theater["rating"], )
+      binding.pry
+      cinema.gmaps_address ||= theater["vicinity"].gsub(' ', '+') || self.query_address.gsub(" ","+")
+      cinema.save
+      request_theater = self.request_theaters.build(request_id: self.id, theater_id: cinema.id)
       request_theater.save
       #theater.get_info()
     end
@@ -108,11 +110,12 @@ class Request < ActiveRecord::Base
     url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json"
     url += "?q=#{slugify(movie_title)}&page_limit=10&page=1"
     url += "&apikey=#{ENV['RT_API_KEY']}"
-
+    url = URI.encode(url)
     return JSON.load(open(url))
   end
 
   def slugify(string)
     string.gsub(" ","+").gsub("'","%27").gsub(":","%3A")
   end
+
 end
