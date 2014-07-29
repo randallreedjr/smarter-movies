@@ -1,6 +1,5 @@
 Ideas to implement
 
-- Add submit button to homepage, "Find me movies" (Randall)
 - Heroku time/only displaying one showtime
 - Only show theaters with movies (requests/2)
 - Create theater show page with google map (Chris)
@@ -27,3 +26,4 @@ Ideas to implement
 - ~~Add style to homepage~~
 - ~~About page (Randall)~~
 - ~~Display time in layman's format (Randall)~~
+- ~~Add submit button to homepage, "Find me movies" (Randall)~~

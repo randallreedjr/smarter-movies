@@ -70,3 +70,11 @@ body {
   text-align: center;
   color: #fff;
 }
+
+.tomato_pic {
+  float: right;
+  background: transparent url('/assets/rt_lg.png') no-repeat left top;
+  padding-left: 55px;
+  min-height: 50px;
+  max-height: 50px;
+}
