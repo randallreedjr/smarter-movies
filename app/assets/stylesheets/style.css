@@ -71,10 +71,15 @@ body {
   color: #fff;
 }
 
-.tomato_pic {
+.tomato-pic {
   float: right;
   background: transparent url('/assets/rt_lg.png') no-repeat left top;
-  padding-left: 55px;
+  padding-left: 50px;
+  margin-top: -37px;
   min-height: 50px;
   max-height: 50px;
+}
+
+.rotten {
+  background-position: 0 -50px;
 }

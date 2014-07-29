@@ -6,7 +6,6 @@
 </div>
 <br>
 
-<div class="tomato_pic"></div>
 <% @theaters.each do |theater| %>
   <div class="row">
     <div class="panel panel-warning">
@@ -21,7 +20,7 @@
           <div class="panel-heading">
             <div class="panel-title">
               <%= movie.title %>
-            </div>
+            </div><span class="tomato-pic <%= "rotten" unless movie.fresh? %>"></span>
           </div>
           <div class="panel-body">
             <div>
