@@ -83,3 +83,7 @@ body {
 .rotten {
   background-position: 0 -50px;
 }
+
+.panel-title {
+  max-width: 220px;
+}
