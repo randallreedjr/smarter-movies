@@ -1,14 +1,15 @@
 Ideas to implement
 
+- Add submit button to homepage, "Find me movies" (Randall)
 - Display time in layman's format (Randall)
 - Heroku time/only displaying one showtime
 - Only show theaters with movies (requests/2)
 - Create theater show page with google map (Chris)
-- Add rotten tomatoes sprites to movies
+- Add rotten tomatoes sprites to movies (Randall)
 - Better handling of 3D/IMAX showtimes -- possibly via a boolean column
 - Better date/time, timezone based on address?
 - Make everything faster
-- Logo at top of page
+- Logo at top of page?
 - progress bar (loading results)
 - General refactoring
 - Add partials for displaying theaters, movies, and showtimes (Randall?)
