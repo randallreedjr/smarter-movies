@@ -30,13 +30,8 @@
             <div>
               Rotten Tomatoes Rating: <%= movie.tomatometer %>
               <div class="progress">
-              <% if movie.tomatometer >= 60 %>
-                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="<%= movie.tomatometer %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie.tomatometer %>%">
+                <div class="progress-bar <%= movie.tomatometer >= 60 ? "progress-bar-danger" : "progress-bar-success" %>" role="progressbar" aria-valuenow="<%= movie.tomatometer %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie.tomatometer %>%">
                 </div>
-              <% else %>
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="<%= movie.tomatometer %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie.tomatometer %>%">
-                </div>
-              <% end %>
               </div>
               Upcoming Showtimes:
             </div>
