@@ -28,9 +28,9 @@
             </div>
             <br>
             <div>
-              Rotten Tomatoes Rating: <%= movie.tomatometer %>
+              Rotten Tomatoes Rating:
               <div class="progress">
-                <div class="progress-bar <%= movie.fresh? ? "progress-bar-danger" : "progress-bar-success" %>" role="progressbar" aria-valuenow="<%= movie.tomatometer %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie.tomatometer %>%">
+                <div class="progress-bar <%= movie.fresh? ? "progress-bar-danger" : "progress-bar-success" %>" role="progressbar" aria-valuenow="<%= movie.tomatometer %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie.tomatometer %>%"><%= movie.tomatometer %>%
                 </div>
               </div>
               Upcoming Showtimes:
