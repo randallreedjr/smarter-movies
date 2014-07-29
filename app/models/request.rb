@@ -22,7 +22,7 @@ class Request < ActiveRecord::Base
     theaters["results"] += call_google_API(theaters["next_page_token"])["results"]
     theaters["results"].each do |theater|
       cinema = Theater.find_or_create_by(name: theater["name"], rating: theater["rating"], )
-      binding.pry
+      #binding.pry
       cinema.gmaps_address ||= theater["vicinity"].gsub(' ', '+') || self.query_address.gsub(" ","+")
       cinema.save
       request_theater = self.request_theaters.build(request_id: self.id, theater_id: cinema.id)

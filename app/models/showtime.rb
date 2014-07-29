@@ -6,6 +6,10 @@ class Showtime < ActiveRecord::Base
     time.split('T').join(' ')
   end
 
+  def printable_time
+    Time.parse(time.sub('T',' ')).strftime("%l:%M%P")
+  end
+
   def to_datetime
     Time.parse(readable_time) #=> "2014-07-27 10:30:00 -0400"
   end

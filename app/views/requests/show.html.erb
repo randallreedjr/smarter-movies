@@ -43,7 +43,7 @@
             <div class="list-group">
               <% movie.next_three_showtimes(theater).each do |showtime| %>
                 <div class="list-group-item">
-                  <%= showtime.readable_time %>
+                  <%= showtime.printable_time %>
                   <% if showtime.fandango_url %>
                     - <%= link_to "Fandango", showtime.fandango_url%>
                   <% end %>
