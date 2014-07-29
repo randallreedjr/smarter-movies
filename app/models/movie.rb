@@ -12,4 +12,8 @@ class Movie < ActiveRecord::Base
     return st
   end
 
+  def fresh?
+    tomatometer >= 60
+  end
+
 end
