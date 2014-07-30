@@ -102,7 +102,7 @@ class Request < ActiveRecord::Base
     movie_title.sub!(": An IMAX 3D Experience","")
     ratings = call_RT_API(movie_title)
     
-    if ratings["total"] == 0
+    if ratings["total"] == 0 || !ratings["movies"]
       return -1
     else
       ratings["movies"].each do |rating|
