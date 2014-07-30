@@ -20,7 +20,7 @@ class RequestsController < ApplicationController
     @request.geocode()
     @request.save()
     @request.make_theaters()
-    @request.make_movies()
+    Thread.new {@request.make_movies()}
     redirect_to request_path(@request)
   end
 

@@ -21,13 +21,12 @@ class Request < ActiveRecord::Base
     theaters = call_google_API()
     theaters["results"] += call_google_API(theaters["next_page_token"])["results"]
     theaters["results"].each do |theater|
+      next if theater["rating"] == 0
       cinema = Theater.find_or_create_by(name: theater["name"], rating: theater["rating"], )
-      #binding.pry
       cinema.gmaps_address ||= theater["vicinity"].gsub(' ', '+') || self.query_address.gsub(" ","+")
       cinema.save
       request_theater = self.request_theaters.build(request_id: self.id, theater_id: cinema.id)
       request_theater.save
-      #theater.get_info()
     end
   end
 
@@ -53,10 +52,12 @@ class Request < ActiveRecord::Base
     movies.each do |movie|
       this_movie = Movie.find_by(title: movie["title"])
       if !this_movie
+        Thread.new {
         this_movie = Movie.create(title: movie["title"])
         this_movie.tomatometer = get_tomatometer(movie["title"], movie["releaseYear"])
         this_movie.description ||= movie["shortDescription"]
         this_movie.save
+        }
       end
       movie["showtimes"].each do |showtime|
         theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
