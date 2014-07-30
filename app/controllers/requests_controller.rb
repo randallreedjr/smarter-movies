@@ -11,16 +11,16 @@ class RequestsController < ApplicationController
     @request = Request.find(params[:id])
     @theaters = Theater.joins("INNER JOIN \"request_theaters\" ON \"request_theaters\".\"theater_id\" = \"theaters\".\"id\"")
                   .joins("INNER JOIN \"showtimes\" ON \"showtimes\".\"theater_id\" = \"theaters\".\"id\"")
-                  .where("\"request_theaters\".\"request_id\" = ?", @request.id)
+                  .where("\"request_theaters\".\"request_id\" = ? AND \"theaters\".\"rating\" IS NOT NULL", @request.id)
                   .order("\"theaters\".\"rating\" DESC").limit(5).distinct()
   end
-
+  
   def create
     @request = Request.create(request_params)
     @request.geocode()
     @request.save()
     @request.make_theaters()
-    Thread.new {@request.make_movies()}
+    @request.make_movies()
     redirect_to request_path(@request)
   end
 

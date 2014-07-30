@@ -6,7 +6,6 @@ class Request < ActiveRecord::Base
   has_many :theaters, through: :request_theaters
 
   def geocode()
-
     address = self.query_address.gsub(" ","+")
     url = "http://maps.google.com/maps/api/geocode/json?address=#{address}&sensor=false"
     results = JSON.load(open(url))["results"][0]
@@ -19,10 +18,17 @@ class Request < ActiveRecord::Base
 
   def make_theaters()
     theaters = call_google_API()
-    theaters["results"] += call_google_API(theaters["next_page_token"])["results"]
+    if theaters["next_page_token"]
+      theaters["results"] += call_google_API(theaters["next_page_token"])["results"]
+    end
     theaters["results"].each do |theater|
       next if theater["rating"] == 0
-      cinema = Theater.find_or_create_by(name: theater["name"], rating: theater["rating"], )
+      normalized_name = normalize(theater["name"])
+      if !(cinema = Theater.find_by(normalized_name: normalized_name))
+        cinema = Theater.create(name: theater["name"], 
+                                rating: theater["rating"], 
+                                normalized_name: normalized_name)
+      end
       cinema.gmaps_address ||= theater["vicinity"].gsub(' ', '+') || self.query_address.gsub(" ","+")
       cinema.save
       request_theater = self.request_theaters.build(request_id: self.id, theater_id: cinema.id)
@@ -43,7 +49,6 @@ class Request < ActiveRecord::Base
       base_url += "?pagetoken=#{pagetoken}"
       base_url += "&key=#{ENV['GOOGLE_API_KEY']}"
     end
-    
     return JSON.load(open(base_url))
   end
 
@@ -52,16 +57,20 @@ class Request < ActiveRecord::Base
     movies.each do |movie|
       this_movie = Movie.find_by(title: movie["title"])
       if !this_movie
-        Thread.new {
+        
         this_movie = Movie.create(title: movie["title"])
         this_movie.tomatometer = get_tomatometer(movie["title"], movie["releaseYear"])
         this_movie.description ||= movie["shortDescription"]
         this_movie.save
-        }
+        
       end
       movie["showtimes"].each do |showtime|
-        theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
-        
+        #theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
+        normalized_name = normalize(showtime["theatre"]["name"])
+        if !(theater = Theater.find_by(normalized_name: normalized_name))
+          theater = Theater.create(name: showtime["theatre"]["name"],
+                                   normalized_name: normalized_name)
+        end
         if !RequestTheater.find_by(request_id: self.id, theater_id: theater.id)
           request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
           request_theater.save
@@ -115,8 +124,13 @@ class Request < ActiveRecord::Base
     return JSON.load(open(url))
   end
 
+private
   def slugify(string)
     string.gsub(" ","+").gsub("'","%27").gsub(":","%3A")
+  end
+
+  def normalize(string)
+    string.sub("RPX","").sub("UA ","United Artists").downcase.sub("cinemas","").sub("cinema","").gsub(" ","").sub("theatre","theater").sub("movietheater","").sub("&","").sub("stadium","").sub("\u200e","")
   end
 
 end
