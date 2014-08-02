@@ -14,7 +14,8 @@
         
         <%= "(#{result[:rating]} stars)" %>
       </div>
-    </div>
+      <div class="panel-body">
+    
     <% result[:movies][0..2].each do |movie| %>
       <div class="col-sm-4">
         <div class="panel panel-info">
@@ -59,5 +60,7 @@
         </div>
       </div>
     <% end %>
+    </div>
+  </div>
   </div>
 <% end %>

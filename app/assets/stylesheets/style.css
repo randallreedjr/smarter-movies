@@ -87,3 +87,7 @@ body {
 .panel-title {
   max-width: 220px;
 }
+
+.panel-warning > .panel-body {
+  background-color: #fcf8e3;
+}
