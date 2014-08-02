@@ -4,32 +4,22 @@
 #   gem install pg
 # On OS X with Homebrew:
 #   gem install pg -- --with-pg-config=/usr/local/bin/pg_config
-# On OS X with MacPorts:
-#   gem install pg -- --with-pg-config=/opt/local/lib/postgresql84/bin/pg_config
-# On Windows:
-#   gem install pg
-#       Choose the win32 build.
-#       Install PostgreSQL and put its /bin directory on your path.
-#
-# Configure Using Gemfile
-# gem 'pg'
-#
-default: &default
-  adapter: postgresql
-  encoding: unicode
-  # For details on connection pooling, see rails configuration guide
-  # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: 5
 
-development:
-  <<: *default
-  database: pickaplex_development
+# default: &default
+#   adapter: postgresql
+#   encoding: unicode
+#   pool: 5
+
+# development:
+#   <<: *default
+#   database: pickaplex_development
+#   username: pickaplex
+
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
   # the same name as the operating system user that initialized the database.
-  username: pickaplex
 
   # The password associated with the postgres role (username).
   #password:
@@ -55,9 +45,9 @@ development:
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
-test:
-  <<: *default
-  database: pickaplex_test
+# test:
+#   <<: *default
+#   database: pickaplex_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -78,8 +68,33 @@ test:
 #   production:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
-production:
+# production:
+#   <<: *default
+#   database: pickaplex_production
+#   username: pickaplex
+#   password: <%= ENV['PICKAPLEX_DATABASE_PASSWORD'] %>
+
+# SQLite version 3.x
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+#
+default: &default
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+
+development:
   <<: *default
-  database: pickaplex_production
-  username: pickaplex
-  password: <%= ENV['PICKAPLEX_DATABASE_PASSWORD'] %>
+  database: db/development.sqlite3
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: db/test.sqlite3
+
+production:
+  url: <%= ENV["DATABASE_URL"] %>

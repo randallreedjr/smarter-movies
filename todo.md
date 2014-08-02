@@ -1,18 +1,19 @@
 Ideas to implement
 
-- Heroku time/only displaying one showtime
-- Only show theaters with movies (requests/2)
-- Create theater show page with google map (Chris)
-- Add rotten tomatoes sprites to movies (Randall)
 - Better handling of 3D/IMAX showtimes -- possibly via a boolean column
-- Better date/time, timezone based on address?
+- General refactoring (esp. requests)
 - Make everything faster
-- Logo at top of page?
+
+- Use google for improved results fetching?
+- Heroku time/only displaying one showtime
+- Only show theaters with movies
+- Create theater show page with google map (Chris)
+- Add link from theater show page back to results
+- Better date/time, timezone based on address?
+- ~~Logo at top of page?~~
 - progress bar (loading results)
-- General refactoring
 - Add partials for displaying theaters, movies, and showtimes (Randall?)
-- Improve theater name matching
-- Improve rotten tomatoes movie title matching
+- ~~Improve rotten tomatoes movie title matching~~
 - Figure out how to cache API calls
 - Upgrade to AJAX
 
@@ -27,3 +28,5 @@ Ideas to implement
 - ~~About page (Randall)~~
 - ~~Display time in layman's format (Randall)~~
 - ~~Add submit button to homepage, "Find me movies" (Randall)~~
+- ~~Add rotten tomatoes sprites to movies (Randall)~~
+- ~~Improve theater name matching (Randall)~~

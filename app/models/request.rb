@@ -4,15 +4,28 @@ require 'pry'
 class Request < ActiveRecord::Base
   has_many :request_theaters
   has_many :theaters, through: :request_theaters
+  def ip=(ip)
+    @ip = ip
+  end
+
+  def ip
+    @ip
+  end
 
   def geocode()
-    address = self.query_address.gsub(" ","+")
-    url = "http://maps.google.com/maps/api/geocode/json?address=#{address}&sensor=false"
-    results = JSON.load(open(url))["results"][0]
+    if self.query_address.strip == ""
+      self.formatted_address = Geocoder::address(ip)
+      self.latitude, self.longitude = Geocoder::coordinates(ip)
+    else
+      address = self.query_address.gsub(" ","+")
+      url = "http://maps.google.com/maps/api/geocode/json?address=#{address}&sensor=false"
+      results = JSON.load(open(url))["results"][0]
 
-    self.formatted_address = results["formatted_address"]
-    self.latitude =  results["geometry"]["location"]["lat"]
-    self.longitude = results["geometry"]["location"]["lng"]
+      self.formatted_address = results["formatted_address"]
+      self.latitude =  results["geometry"]["location"]["lat"]
+      self.longitude = results["geometry"]["location"]["lng"]
+    end
+    #8km, ~5mi
     self.radius = 8000
   end
 

@@ -17,6 +17,7 @@ class RequestsController < ApplicationController
   
   def create
     @request = Request.create(request_params)
+    @request.ip = remote_ip
     @request.geocode()
     @request.save()
     @request.make_theaters()
