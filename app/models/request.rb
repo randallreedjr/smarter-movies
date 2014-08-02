@@ -137,21 +137,30 @@ class Request < ActiveRecord::Base
     return JSON.load(open(url))
   end
 
-  def top_five_theaters()
-    top_theaters = {}
+  def top_five_theaters
     theaters = Theater.joins(:request_theaters).where(:request_theaters => {:request_id => self.id}).where("\"rating\" > 0").order(:rating => :desc)
-    theaters.first.top_movie_showtimes.each do |showtime|
-      top_theaters[:name] = showtime["name"]
-      top_theaters[:movies] ||= []
-      if top_theaters[:movies]
+  end
+
+  def top_showtimes
+    results = []
+    top_five_theaters.each do |theater|
+      top_theaters = {}
+      theater.top_movie_showtimes.each do |showtime|
+        top_theaters[:name] ||= showtime["name"]
+        top_theaters[:rating] ||= showtime["rating"]
+        top_theaters[:movies] ||= []
+        if top_theaters[:movies].any? {|hash| hash[:title] == showtime["title"] }
+          i = top_theaters[:movies].index(top_theaters[:movies].find{|hash| hash[:title] == showtime["title"]})
+          top_theaters[:movies][i][:showtimes] << showtime["time"]
+        else
           top_theaters[:movies] << {:title => showtime["title"],
                                 :tomatometer => showtime["tomatometer"],
                                 :showtimes => [showtime["time"]]}  
-      else
-        top_theaters[:movies][:showtimes] << showtime["time"]
+        end
       end
-                            
+      results << top_theaters
     end
+    results
   end
 
 private
