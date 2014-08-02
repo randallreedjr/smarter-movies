@@ -151,11 +151,14 @@ class Request < ActiveRecord::Base
         top_theaters[:movies] ||= []
         if top_theaters[:movies].any? {|hash| hash[:title] == showtime["title"] }
           i = top_theaters[:movies].index(top_theaters[:movies].find{|hash| hash[:title] == showtime["title"]})
-          top_theaters[:movies][i][:showtimes] << showtime["time"]
+          if top_theaters[:movies][i][:showtimes].count < 3
+            top_theaters[:movies][i][:showtimes] << {time: showtime["time"], fandango_url: showtime["fandango_url"]}
+          end
         else
           top_theaters[:movies] << {:title => showtime["title"],
                                 :tomatometer => showtime["tomatometer"],
-                                :showtimes => [showtime["time"]]}  
+                                :description => showtime["description"],
+                                :showtimes => [{time: showtime["time"], fandango_url: showtime["fandango_url"]}]}  
         end
       end
       results << top_theaters

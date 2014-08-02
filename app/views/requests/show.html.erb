@@ -25,7 +25,7 @@
           </div>
           <div class="panel-body">
             <div>
-              <%#= movie.description %>
+              <%= movie[:description] %>
             </div>
             <br>
             <div>
@@ -39,10 +39,10 @@
             <div class="list-group">
               <% movie[:showtimes].each do |showtime| %>
                 <div class="list-group-item">
-                  <%= showtime.split('T').last %>
-                  <%# if showtime.fandango_url %>
-                    <!-- - --> <%#= link_to "Fandango", showtime.fandango_url%>
-                  <%# end %>
+                  <%= showtime[:time].split('T').last %>
+                  <% if showtime[:fandango_url] %>
+                    <%= link_to "Fandango", showtime[:fandango_url], target: "_blank" %>
+                  <% end %>
                 </div>
               <% end %>
             </div>

@@ -10,8 +10,10 @@ class Theater < ActiveRecord::Base
     SELECT theaters.name, 
            movies.title, 
            movies.tomatometer, 
+           movies.description,
            theaters.rating, 
-           showtimes.time
+           showtimes.time,
+           showtimes.fandango_url
     FROM theaters
     JOIN
     (
