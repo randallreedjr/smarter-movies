@@ -41,7 +41,7 @@
                 <div class="list-group-item">
                   <%= showtime[:time].split('T').last %>
                   <% if showtime[:fandango_url] %>
-                    <%= link_to "Fandango", showtime[:fandango_url], target: "_blank" %>
+                    - <%= link_to "Fandango", showtime[:fandango_url], target: "_blank" %>
                   <% end %>
                 </div>
               <% end %>
