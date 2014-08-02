@@ -1,6 +1,7 @@
 require 'open-uri'
 require 'json'
 require 'pry'
+
 class Request < ActiveRecord::Base
   has_many :request_theaters
   has_many :theaters, through: :request_theaters
@@ -67,8 +68,11 @@ class Request < ActiveRecord::Base
 
   def make_movies()
     movies = call_TMS_API()
+    movie_threads = []
+
     movies.each do |movie|
-      this_movie = Movie.find_by(title: movie["title"])
+      this_movie = nil
+        this_movie = Movie.find_by(title: movie["title"])
       if !this_movie
         
         this_movie = Movie.create(title: movie["title"])
@@ -93,11 +97,7 @@ class Request < ActiveRecord::Base
                                               :time => showtime["dateTime"],
                                               :theater_id => theater.id)
         show.fandango_url = showtime["ticketURI"]
-        # showtime = this_movie.showtimes.find_or_initialize_by(:fandango_url => showtime["ticketURI"], 
-        #                                    :time => showtime["dateTime"],
-        #                                    :theater_id => theater.id)
         show.save
-        
       end
     end
   end
@@ -135,6 +135,23 @@ class Request < ActiveRecord::Base
     url += "&apikey=#{ENV['RT_API_KEY']}"
     url = URI.encode(url)
     return JSON.load(open(url))
+  end
+
+  def top_five_theaters()
+    top_theaters = {}
+    theaters = Theater.joins(:request_theaters).where(:request_theaters => {:request_id => self.id}).where("\"rating\" > 0").order(:rating => :desc)
+    theaters.first.top_movie_showtimes.each do |showtime|
+      top_theaters[:name] = showtime["name"]
+      top_theaters[:movies] ||= []
+      if top_theaters[:movies]
+          top_theaters[:movies] << {:title => showtime["title"],
+                                :tomatometer => showtime["tomatometer"],
+                                :showtimes => [showtime["time"]]}  
+      else
+        top_theaters[:movies][:showtimes] << showtime["time"]
+      end
+                            
+    end
   end
 
 private
