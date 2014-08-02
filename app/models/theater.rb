@@ -8,12 +8,14 @@ class Theater < ActiveRecord::Base
     current_time = Time.now.strftime("%Y-%m-%dT%H:%M:%S")
     sql = <<-SQL
     SELECT theaters.name, 
+           theaters.id,
            movies.title, 
            movies.tomatometer, 
            movies.description,
            theaters.rating, 
            showtimes.time,
-           showtimes.fandango_url
+           showtimes.fandango_url,
+           showtimes.three_d
     FROM theaters
     JOIN
     (
@@ -43,23 +45,6 @@ class Theater < ActiveRecord::Base
 SQL
     ActiveRecord::Base.connection.execute(sql)
   end
-
-
-
-  # def top_three_movies
-  #   # Movie.joins(:showtimes => :theater).
-  #   #   where(:theaters => {:id => self.id}).
-  #   #   order(:tomatometer => :desc).distinct.limit(3)
-
-  #   movs_with_showtimes = movies.collect do |movie|
-  #     movie unless movie.next_three_showtimes(self).empty?
-  #   end.compact.uniq
-
-  #   movs = movs_with_showtimes.sort_by(&:tomatometer).reverse
-
-  #   movs = movs[0..2] if movs.size > 3
-  #   return movs
-  # end
 end
 
 

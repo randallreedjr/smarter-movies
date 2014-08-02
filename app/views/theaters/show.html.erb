@@ -1,3 +1,6 @@
+<% if theater["photos"] %>
+  <%= image_tag "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=#{theater["photos"][0]["photo_reference"]}&key=#{ENV['GOOGLE_API_KEY']}" %><br>
+<% end %>
 <iframe
   width="600"
   height="450"

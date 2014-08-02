@@ -10,11 +10,6 @@ class RequestsController < ApplicationController
   def show
     @request = Request.find(params[:id])
     @results = @request.top_showtimes.reject{|h| h == {}}
-    # @theaters = Theater.joins("INNER JOIN \"request_theaters\" ON \"request_theaters\".\"theater_id\" = \"theaters\".\"id\"")
-    #               .joins("INNER JOIN \"showtimes\" ON \"showtimes\".\"theater_id\" = \"theaters\".\"id\"")
-    #               .where("\"request_theaters\".\"request_id\" = ? AND \"theaters\".\"rating\" IS NOT NULL", @request.id)
-    #               .order("\"theaters\".\"rating\" DESC").limit(5).distinct()
-
   end
   
   def create
@@ -23,7 +18,11 @@ class RequestsController < ApplicationController
     @request.geocode()
     @request.save()
     @request.make_theaters()
-    @request.make_movies()
+    if (@request.theaters.select do |theater|
+      theater.movies.count > 3 && theater.showtimes.count > 6
+    end).count <= 5
+      @request.make_movies()
+    end
     redirect_to request_path(@request)
   end
 

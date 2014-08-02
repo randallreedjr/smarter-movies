@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140730005612) do
+ActiveRecord::Schema.define(version: 20140802210427) do
 
   create_table "movies", force: true do |t|
     t.string   "title"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 20140730005612) do
     t.integer  "movie_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "three_d"
   end
 
   add_index "showtimes", ["movie_id"], name: "index_showtimes_on_movie_id"

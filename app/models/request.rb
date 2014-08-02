@@ -42,9 +42,9 @@ class Request < ActiveRecord::Base
         cinema = Theater.create(name: theater["name"], 
                                 rating: theater["rating"], 
                                 normalized_name: normalized_name)
+        cinema.gmaps_address = theater["vicinity"].gsub(' ', '+') || self.query_address.gsub(" ","+")
+        cinema.save
       end
-      cinema.gmaps_address ||= theater["vicinity"].gsub(' ', '+') || self.query_address.gsub(" ","+")
-      cinema.save
       request_theater = self.request_theaters.build(request_id: self.id, theater_id: cinema.id)
       request_theater.save
     end
@@ -67,37 +67,40 @@ class Request < ActiveRecord::Base
   end
 
   def make_movies()
+    Movie.build_movies
     movies = call_TMS_API()
-    movie_threads = []
-
     movies.each do |movie|
-      this_movie = nil
-        this_movie = Movie.find_by(title: movie["title"])
-      if !this_movie
-        
-        this_movie = Movie.create(title: movie["title"])
-        this_movie.tomatometer = get_tomatometer(movie["title"], movie["releaseYear"])
-        this_movie.description ||= movie["shortDescription"]
-        this_movie.save
-        
+      three_d = false
+      if movie["title"].end_with?(" 3D")
+        three_d = true
+        movie["title"] = movie["title"][0...-3]
       end
-      movie["showtimes"].each do |showtime|
-        #theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
-        normalized_name = normalize(showtime["theatre"]["name"])
-        if !(theater = Theater.find_by(normalized_name: normalized_name))
-          theater = Theater.create(name: showtime["theatre"]["name"],
-                                   normalized_name: normalized_name)
+      if this_movie = Movie.find_by(title: movie["title"])
+        if !this_movie.description
+          this_movie.description = movie["shortDescription"]
+          this_movie.save
         end
-        if !RequestTheater.find_by(request_id: self.id, theater_id: theater.id)
-          request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
-          request_theater.save
-        end
+               
+      if !this_movie.showtimes.any? || (this_movie.showtimes.any? && this_movie.showtimes.last.time < Time.now)
+        movie["showtimes"].each do |showtime|
+          #theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
+          normalized_name = normalize(showtime["theatre"]["name"])
+          if !(theater = Theater.find_by(normalized_name: normalized_name))
+            theater = Theater.create(name: showtime["theatre"]["name"],
+                                     normalized_name: normalized_name)
+          end
+          if !RequestTheater.find_by(request_id: self.id, theater_id: theater.id)
+            request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
+            request_theater.save
+          end
 
-        show = Showtime.find_or_create_by(:movie_id => this_movie.id, 
-                                              :time => showtime["dateTime"],
-                                              :theater_id => theater.id)
-        show.fandango_url = showtime["ticketURI"]
-        show.save
+          show = Showtime.find_or_create_by(:movie_id => this_movie.id, 
+                                            :time => showtime["dateTime"],
+                                            :theater_id => theater.id)
+          show.fandango_url = showtime["ticketURI"]
+          show.three_d = three_d
+          show.save
+        end
       end
     end
   end
@@ -111,32 +114,6 @@ class Request < ActiveRecord::Base
     return JSON.load(open(movie_url))
   end
 
-  def get_tomatometer(movie_title, release_year)
-    movie_title.sub!(": An IMAX 3D Experience","")
-    ratings = call_RT_API(movie_title)
-    
-    if ratings["total"] == 0 || !ratings["movies"]
-      return -1
-    else
-      ratings["movies"].each do |rating|
-        if rating["title"] == movie_title && rating["year"] == release_year
-          score = rating["ratings"]["critics_score"]
-          return score == -1 ? rating["ratings"]["audience_score"] : rating["ratings"]["critics_score"]
-        end
-      end
-    end
-    
-    return ratings["movies"][0]["ratings"]["critics_score"]
-  end
-
-  def call_RT_API(movie_title)
-    url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json"
-    url += "?q=#{slugify(movie_title)}&page_limit=10&page=1"
-    url += "&apikey=#{ENV['RT_API_KEY']}"
-    url = URI.encode(url)
-    return JSON.load(open(url))
-  end
-
   def top_five_theaters
     theaters = Theater.joins(:request_theaters).where(:request_theaters => {:request_id => self.id}).where("\"rating\" > 0").order(:rating => :desc)
   end
@@ -147,18 +124,19 @@ class Request < ActiveRecord::Base
       top_theaters = {}
       theater.top_movie_showtimes.each do |showtime|
         top_theaters[:name] ||= showtime["name"]
+        top_theaters[:id] ||= showtime["id"]
         top_theaters[:rating] ||= showtime["rating"]
         top_theaters[:movies] ||= []
         if top_theaters[:movies].any? {|hash| hash[:title] == showtime["title"] }
           i = top_theaters[:movies].index(top_theaters[:movies].find{|hash| hash[:title] == showtime["title"]})
           if top_theaters[:movies][i][:showtimes].count < 3
-            top_theaters[:movies][i][:showtimes] << {time: showtime["time"], fandango_url: showtime["fandango_url"]}
+            top_theaters[:movies][i][:showtimes] << {time: showtime["time"], fandango_url: showtime["fandango_url"], three_d: showtime["three_d"]}
           end
         else
           top_theaters[:movies] << {:title => showtime["title"],
                                 :tomatometer => showtime["tomatometer"],
                                 :description => showtime["description"],
-                                :showtimes => [{time: showtime["time"], fandango_url: showtime["fandango_url"]}]}  
+                                :showtimes => [{time: showtime["time"], fandango_url: showtime["fandango_url"], three_d: showtime["three_d"]}]}  
         end
       end
       results << top_theaters
