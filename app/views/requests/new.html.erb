@@ -1,7 +1,7 @@
 <div class="jumbotron prompt">
   Enter your address to see movies playing near you!
   <%= form_for @request do |f| %>
-    <%= f.text_field :query_address %>
+    <%= f.text_field :query_address, placeholder: "Leave blank to use current location" %>
     <%= f.submit "Find me movies!", :class => "btn btn-lg btn-warning" %>
   <% end %>
 </div>
