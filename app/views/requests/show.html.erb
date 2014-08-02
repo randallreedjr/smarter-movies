@@ -11,56 +11,54 @@
     <div class="panel panel-warning">
       <div class="panel-heading">
         <%= link_to result[:name], "/theaters/#{result[:id]}" %>
-        
         <%= "(#{result[:rating]} stars)" %>
       </div>
       <div class="panel-body">
-    
-    <% result[:movies][0..2].each do |movie| %>
-      <div class="col-sm-4">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            <div class="panel-title">
-              <%= movie[:title] %>
-            </div><span class="tomato-pic <%= "rotten" unless movie[:tomatometer] >= 60 %>"></span>
-          </div>
-          <div class="panel-body">
-            <div>
-              <%= movie[:description] %>
-              <% if movie["alternate_ids"] && movie["alternate_ids"]["imdb"] %>
-                <%= link_to "IMDB", "http://www.imdb.com/title/tt#{movie["alternate_ids"]["imdb"]}/" %><br>
-              <% end %>
-              <% if movie["posters"] %>
-                <%= image_tag movie["posters"]["original"] %>
-              <% end %>
+        <% result[:movies][0..2].each do |movie| %>
+        <div class="col-sm-4">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <div class="panel-title">
+                <%= movie[:title] %>
+              </div><span class="tomato-pic <%= "rotten" unless movie[:tomatometer] >= 60 %>"></span>
             </div>
-            <br>
-            <div>
-              Rotten Tomatoes Rating:
-              <div class="progress">
-                <div class="progress-bar <%= movie[:tomatometer] >= 60 ? "progress-bar-danger" : "progress-bar-success" %>" role="progressbar" aria-valuenow="<%= movie[:tomatometer] %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie[:tomatometer] %>%"><%= movie[:tomatometer] %>%
-                </div>
+            <div class="panel-body">
+              <div>
+                <%= movie[:description] %>
+                <% if movie["alternate_ids"] && movie["alternate_ids"]["imdb"] %>
+                  <%= link_to "IMDB", "http://www.imdb.com/title/tt#{movie["alternate_ids"]["imdb"]}/" %><br>
+                <% end %>
+                <% if movie["posters"] %>
+                  <%= image_tag movie["posters"]["original"] %>
+                <% end %>
               </div>
-              Upcoming Showtimes:
-            </div>
-            <div class="list-group">
-              <% movie[:showtimes].each do |showtime| %>
-                <div class="list-group-item">
-                  <%= showtime[:time].split('T').last %>
-                  <% if showtime[:three_d] == "t" %>
-                    <%= " (3D) " %>
-                  <% end %>
-                  <% if showtime[:fandango_url] %>
-                    - <%= link_to "Fandango", showtime[:fandango_url], target: "_blank" %>
-                  <% end %>
+              <br>
+              <div>
+                Rotten Tomatoes Rating:
+                <div class="progress">
+                  <div class="progress-bar <%= movie[:tomatometer] >= 60 ? "progress-bar-danger" : "progress-bar-success" %>" role="progressbar" aria-valuenow="<%= movie[:tomatometer] %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie[:tomatometer] %>%"><%= movie[:tomatometer] %>%
+                  </div>
                 </div>
-              <% end %>
+                Upcoming Showtimes:
+              </div>
+              <div class="list-group">
+                <% movie[:showtimes].each do |showtime| %>
+                  <div class="list-group-item">
+                    <%= showtime[:time].split('T').last %>
+                    <% if showtime[:three_d] == "t" %>
+                      <%= " (3D) " %>
+                    <% end %>
+                    <% if showtime[:fandango_url] %>
+                      - <%= link_to "Fandango", showtime[:fandango_url], target: "_blank" %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
             </div>
           </div>
         </div>
+      <% end %>
       </div>
-    <% end %>
     </div>
-  </div>
   </div>
 <% end %>
