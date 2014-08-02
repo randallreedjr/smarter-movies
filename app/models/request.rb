@@ -81,25 +81,26 @@ class Request < ActiveRecord::Base
           this_movie.save
         end
                
-      if !this_movie.showtimes.any? || (this_movie.showtimes.any? && this_movie.showtimes.last.time < Time.now)
-        movie["showtimes"].each do |showtime|
-          #theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
-          normalized_name = normalize(showtime["theatre"]["name"])
-          if !(theater = Theater.find_by(normalized_name: normalized_name))
-            theater = Theater.create(name: showtime["theatre"]["name"],
-                                     normalized_name: normalized_name)
-          end
-          if !RequestTheater.find_by(request_id: self.id, theater_id: theater.id)
-            request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
-            request_theater.save
-          end
+        if !this_movie.showtimes.any? || (this_movie.showtimes.any? && this_movie.showtimes.last.time < Time.now)
+          movie["showtimes"].each do |showtime|
+            #theater = Theater.find_or_create_by(:name => showtime["theatre"]["name"])
+            normalized_name = normalize(showtime["theatre"]["name"])
+            if !(theater = Theater.find_by(normalized_name: normalized_name))
+              theater = Theater.create(name: showtime["theatre"]["name"],
+                                       normalized_name: normalized_name)
+            end
+            if !RequestTheater.find_by(request_id: self.id, theater_id: theater.id)
+              request_theater = self.request_theaters.build(request_id: self.id, theater_id: theater.id)
+              request_theater.save
+            end
 
-          show = Showtime.find_or_create_by(:movie_id => this_movie.id, 
-                                            :time => showtime["dateTime"],
-                                            :theater_id => theater.id)
-          show.fandango_url = showtime["ticketURI"]
-          show.three_d = three_d
-          show.save
+            show = Showtime.find_or_create_by(:movie_id => this_movie.id, 
+                                              :time => showtime["dateTime"],
+                                              :theater_id => theater.id)
+            show.fandango_url = showtime["ticketURI"]
+            show.three_d = three_d
+            show.save
+          end
         end
       end
     end

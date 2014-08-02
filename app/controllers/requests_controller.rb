@@ -31,13 +31,4 @@ class RequestsController < ApplicationController
     params.require(:request).permit(:query_address)
   end
 
-  def remote_ip
-    if request.remote_ip == '127.0.0.1'
-      # Hard coded remote address
-      '108.41.22.45'
-    else
-      request.remote_ip
-    end
-  end
-
 end
