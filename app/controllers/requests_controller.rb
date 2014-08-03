@@ -9,18 +9,23 @@ class RequestsController < ApplicationController
 
   def show
     @request = Request.find(params[:id])
-    @results = @request.top_showtimes.reject{|h| h == {}}
+    @results = @request.top_showtimes.reject{|h| h == {}}[0..4]
   end
   
   def create
     @request = Request.create(request_params)
     @request.ip = remote_ip
-    @request.geocode()
-    @request.save()
-    @request.make_theaters()
-    if (@request.theaters.select do |theater|
-      theater.movies.count > 3 && theater.showtimes.count > 6
-    end).count <= 5
+    @request.geocode
+    @request.save
+    @request.make_theaters
+    current_time = Time.now.strftime("%Y-%m-%dT%H:%M:%S")
+    
+
+    theaters_with_showtimes = @request.theaters.select do |theater|
+      theater.movies.distinct.count > 3 && theater.showtimes.where("time > ?", current_time).count >= 6
+    end
+
+    if theaters_with_showtimes.count <= 5
       @request.make_movies()
     end
     redirect_to request_path(@request)

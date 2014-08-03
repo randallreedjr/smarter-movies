@@ -11,7 +11,7 @@ class Movie < ActiveRecord::Base
       Movie.destroy_all
       movies = []
       3.times do |i|
-        movies.concat (currently_playing_RT_API(i)["movies"] || [])
+        movies.concat currently_playing_RT_API(i+1)["movies"]
       end
       movies.each do |movie|
         this_movie = Movie.new(title: movie["title"])

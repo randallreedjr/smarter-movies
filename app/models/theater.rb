@@ -9,10 +9,10 @@ class Theater < ActiveRecord::Base
     sql = <<-SQL
     SELECT theaters.name, 
            theaters.id,
+           theaters.rating, 
            movies.title, 
            movies.tomatometer, 
            movies.description,
-           theaters.rating, 
            showtimes.time,
            showtimes.fandango_url,
            showtimes.three_d
@@ -24,11 +24,10 @@ class Theater < ActiveRecord::Base
       FROM showtimes
       JOIN movies 
       ON movies.id = showtimes.movie_id
-      WHERE showtimes.theater_id = #{self.id}
+      WHERE showtimes.theater_id = '#{self.id}'
       AND showtimes.time > '#{current_time}'
       GROUP BY showtimes.movie_id, 
                movies.tomatometer
-      HAVING count(*) >= 2
       ORDER BY movies.tomatometer DESC
       LIMIT 1 OFFSET 2
     ) third_tomatometer

@@ -93,6 +93,7 @@ class Request < ActiveRecord::Base
   end
 
   def make_movies()
+
     Movie.build_movies
     movies = call_TMS_API()
     movies.each do |movie|
@@ -101,7 +102,7 @@ class Request < ActiveRecord::Base
         three_d = true
         movie["title"] = movie["title"][0...-3]
       end
-      if this_movie = Movie.find_by(title: movie["title"])
+      if this_movie = Movie.where("lower(\"movies\".\"title\") = ?", movie["title"].downcase).first
         if !this_movie.description
           this_movie.description = movie["shortDescription"]
           this_movie.save
