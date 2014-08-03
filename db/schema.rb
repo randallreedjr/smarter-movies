@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140802210427) do
+ActiveRecord::Schema.define(version: 20140803004018) do
 
   create_table "movies", force: true do |t|
     t.string   "title"
@@ -60,8 +60,11 @@ ActiveRecord::Schema.define(version: 20140802210427) do
     t.float    "rating"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "gmaps_address"
     t.string   "normalized_name"
+    t.float    "lat"
+    t.float    "lng"
+    t.text     "photo_reference"
+    t.string   "place_id"
   end
 
 end

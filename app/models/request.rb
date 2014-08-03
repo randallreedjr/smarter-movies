@@ -32,6 +32,7 @@ class Request < ActiveRecord::Base
 
   def make_theaters()
     theaters = call_google_API()
+    # binding.pry
     if theaters["next_page_token"]
       theaters["results"] += call_google_API(theaters["next_page_token"])["results"]
     end
@@ -39,10 +40,16 @@ class Request < ActiveRecord::Base
       next if theater["rating"] == 0
       normalized_name = normalize(theater["name"])
       if !(cinema = Theater.find_by(normalized_name: normalized_name))
-        cinema = Theater.create(name: theater["name"], 
-                                rating: theater["rating"], 
-                                normalized_name: normalized_name)
-        cinema.gmaps_address = theater["vicinity"].gsub(' ', '+') || self.query_address.gsub(" ","+")
+        cinema = Theater.create(
+          name: theater["name"],
+          rating: theater["rating"],
+          normalized_name: normalized_name,
+          lat: theater["geometry"]["location"]["lat"],
+          lng: theater["geometry"]["location"]["lng"],
+          place_id: theater["place_id"],
+          location: theater["vicinity"]
+        )
+        cinema.photo_reference = theater["photos"][0]["photo_reference"] if theater["photos"]
         cinema.save
       end
       request_theater = self.request_theaters.build(request_id: self.id, theater_id: cinema.id)
