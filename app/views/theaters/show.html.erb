@@ -1,25 +1,9 @@
-<style>
-  html, body, #map-canvas {
-    height: 100%;
-    margin: 0px;
-    padding: 0px
-  }
-</style>
-
-
-<script type="text/javascript"
-  src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_API_KEY'] %>">
-</script>
-<script type="text/javascript">
-  function initialize() {
-    var mapOptions = {
-      center: new google.maps.LatLng(-34.397, 150.644),
-      zoom: 8
-    };
-    var map = new google.maps.Map(document.getElementById("map-canvas"),
-        mapOptions);
-  }
-  google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-
-<div id="map-canvas"/>
+<% if theater["photos"] %>
+  <%= image_tag "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=#{theater["photos"][0]["photo_reference"]}&key=#{ENV['GOOGLE_API_KEY']}" %><br>
+<% end %>
+<iframe
+  width="600"
+  height="450"
+  frameborder="0" style="border:0"
+  src="<%= @gmaps_url %>">
+</iframe>
