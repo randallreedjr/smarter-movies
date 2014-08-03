@@ -30,8 +30,28 @@ class Request < ActiveRecord::Base
     self.radius = 8000
   end
 
+# {"geometry"=>{"location"=>{"lat"=>40.76313, "lng"=>-73.979846}},
+# "icon"=>"http://maps.gstatic.com/mapfiles/place_api/icons/movies-71.png",
+# "id"=>"5a055dc822fe9874c4c68f3d13d86edbb3c66382",
+# "name"=>"Bow Tie Cinemas Ziegfeld Theater",
+# "opening_hours"=>{"open_now"=>true},
+# "photos"=>
+#  [{"height"=>183,
+#    "html_attributions"=>[],
+#    "photo_reference"=>
+#     "CnRnAAAANCyTeUqG101d3X_nmw4ORLFJl-F_IoXw6u7em4nLp-ydsCsUnJE-nVSli9R4d4WIlpxSq0dYBnMrT531DaDJBdUbb7A-FLIpnzTtg84Q5Xz3fqlZ-C3cv-ArwYtxnyfQYQpHFedu9_7n1_nE-BccxBIQFHCxTH-vLGtiXxMqL6ceGxoUhgF9wDoCdsvJLD6RFBpNwpO7Dmc",
+#    "width"=>276}],
+# "place_id"=>"ChIJVfu0s_lYwokR8hngpqNfTeQ",
+# "rating"=>4.5,
+# "reference"=>
+#  "CpQBgwAAAFdEwi9AL5L_Zf9EUdwLOFo0fZqLn5FTGP2Ez6sCAFH5bgIyp94FKZQ0HVy27BJ6gFOruSu_wofUMnre3zpcgG9o0KkatqwSh6DZRDfTrHiE8HoPm_PNi18FXSJsSe17jSeZwz9qcB4iPLXr0kZocV6FlhwJntdXz7Gvwg3AZRl072l0tBtmHM7LuDStJ1HftRIQ1DGG1-UP-hMI8I9BdyCA-xoUM1VfL67MZCM1m-IELJpeD-hWQ9U",
+# "scope"=>"GOOGLE",
+# "types"=>["movie_theater", "establishment"],
+# "vicinity"=>"141 W 54th St, New York"},
+
   def make_theaters()
     theaters = call_google_API()
+    # binding.pry
     if theaters["next_page_token"]
       theaters["results"] += call_google_API(theaters["next_page_token"])["results"]
     end
@@ -39,10 +59,16 @@ class Request < ActiveRecord::Base
       next if theater["rating"] == 0
       normalized_name = normalize(theater["name"])
       if !(cinema = Theater.find_by(normalized_name: normalized_name))
-        cinema = Theater.create(name: theater["name"], 
-                                rating: theater["rating"], 
-                                normalized_name: normalized_name)
-        cinema.gmaps_address = theater["vicinity"].gsub(' ', '+') || self.query_address.gsub(" ","+")
+        cinema = Theater.create(
+          name: theater["name"],
+          rating: theater["rating"],
+          normalized_name: normalized_name,
+          lat: theater["geometry"]["location"]["lat"],
+          lng: theater["geometry"]["location"]["lng"],
+          place_id: theater["place_id"],
+          location: theater["vicinity"]
+        )
+        cinema.photo_reference = theater["photos"][0]["photo_reference"] if theater["photos"]
         cinema.save
       end
       request_theater = self.request_theaters.build(request_id: self.id, theater_id: cinema.id)

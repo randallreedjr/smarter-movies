@@ -1,3 +1,5 @@
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+
 <% if theater["photos"] %>
   <%= image_tag "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=#{theater["photos"][0]["photo_reference"]}&key=#{ENV['GOOGLE_API_KEY']}" %><br>
 <% end %>
@@ -7,3 +9,5 @@
   frameborder="0" style="border:0"
   src="<%= @gmaps_url %>">
 </iframe>
+
+
