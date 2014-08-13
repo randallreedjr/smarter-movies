@@ -26,7 +26,7 @@ class Theater < ActiveRecord::Base
       ON movies.id = showtimes.movie_id
       WHERE showtimes.theater_id = '#{self.id}'
       AND showtimes.time > '#{current_time}'
-      GROUP BY showtimes.movie_id, 
+      GROUP BY showtimes.theater_id, 
                movies.tomatometer
       ORDER BY movies.tomatometer DESC
       LIMIT 1 OFFSET 2
