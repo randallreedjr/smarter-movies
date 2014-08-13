@@ -6,26 +6,27 @@
     <div id="map" style='width: 1200px; height: 600px;'></div>
   </div>
   <script>
-    handler = Gmaps.build('Google');
-    handler.buildMap({
-        provider: {
-          zoom: 17,
-          center: new google.maps.LatLng(<%= @theater.lat %>, <%= @theater.lng %>)
-          },
-        internal: {
-          id: 'map'
-        }
-      },
-      function(){
-        markers = handler.addMarkers([
-          {
-            "lat": <%= @theater.lat %>,
-            "lng": <%= @theater.lng %>
+    $( document ).ready(function() {
+      handler = Gmaps.build('Google');
+      handler.buildMap({
+          provider: {
+            zoom: 17,
+            center: new google.maps.LatLng(<%= @theater.lat %>, <%= @theater.lng %>)
+            },
+          internal: {
+            id: 'map'
           }
-        ]);
-      }
-    );
-
+        },
+        function(){
+          markers = handler.addMarkers([
+            {
+              "lat": <%= @theater.lat %>,
+              "lng": <%= @theater.lng %>
+            }
+          ]);
+        }
+      );
+    });
   </script>
   <% if @theater.photo_reference %>
     <%= image_tag "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1200&photoreference=#{@theater.photo_reference}&key=#{ENV['GOOGLE_API_KEY']}" %><br>
