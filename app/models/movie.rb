@@ -25,5 +25,4 @@ class Movie < ActiveRecord::Base
     url = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?apikey=#{ENV['RT_API_KEY']}&page_limit=50&page=#{page}"
     JSON.load(open(url))
   end
-
 end

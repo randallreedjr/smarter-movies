@@ -6,6 +6,19 @@
 </div>
 <br>
 
+<script type="text/javascript">
+$(document).ready(function() {
+  $( '.movie-title' ).on( 'click', function() {
+    var title = $( this ).text().split(' ').join('+');
+    var that = $( this );
+    $.get( "https://www.googleapis.com/youtube/v3/search?part=snippet&order=rating&q=" + title + "+Official+Trailer&type=video&videoDefinition=high&videoEmbeddable=true&key=<%= ENV['YOUTUBE_API_KEY'] %>", function(data) {
+      // that.append(<)
+      "https://www.youtube.com/watch?v=" + data.items[0].id.videoId;
+    });
+  });
+});
+</script>
+
 <% @results.each do |result| %>
   <div class="row">
     <div class="panel panel-warning">
@@ -19,8 +32,9 @@
           <div class="panel panel-info">
             <div class="panel-heading">
               <div class="panel-title">
-                <%= movie[:title] %>
-              </div><span class="tomato-pic <%= "rotten" unless movie[:tomatometer] >= 60 %>"></span>
+                <span class="movie-title"><%= movie[:title] %></span>
+              </div>
+              <span class="tomato-pic <%= "rotten" unless movie[:tomatometer] >= 60 %>"></span>
             </div>
             <div class="panel-body">
               <div>
