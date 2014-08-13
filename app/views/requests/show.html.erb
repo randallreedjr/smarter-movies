@@ -15,7 +15,7 @@ $(document).ready(function() {
       $.get( "https://www.googleapis.com/youtube/v3/search?part=snippet&order=rating&q=" + title + "+Official+Trailer&type=video&videoDefinition=high&videoEmbeddable=true&key=<%= ENV['YOUTUBE_API_KEY'] %>", function(data) {
         var slug = data.items[0].id.videoId;
 
-        that.append('<br><a href="https://www.youtube.com/watch?v=' + slug + '" target="_blank">Want to see the trailer?</a>');
+        that.append('<br><a class="iframe" target="_blank" href="//www.youtube.com/embed/' + slug + '">Want to see the trailer?</a>');
       });
     }
   });
@@ -36,6 +36,7 @@ $(document).ready(function() {
             <div class="panel-heading">
               <div class="panel-title">
                 <span class="movie-title"><%= movie[:title] %></span>
+                <!-- <div id="player"></div> -->
               </div>
               <span class="tomato-pic <%= "rotten" unless movie[:tomatometer] >= 60 %>"></span>
             </div>
