@@ -38,7 +38,7 @@ $(document).ready(function() {
                 <span class="movie-title"><%= movie[:title] %></span>
                 <!-- <div id="player"></div> -->
               </div>
-              <span class="tomato-pic <%= "rotten" unless movie[:tomatometer] >= 60 %>"></span>
+              <span class="tomato-pic <%= "rotten" unless movie[:tomatometer].to_i >= 60 %>"></span>
             </div>
             <div class="panel-body">
               <div>
