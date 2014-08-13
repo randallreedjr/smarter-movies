@@ -54,7 +54,7 @@ $(document).ready(function() {
               <div>
                 Rotten Tomatoes Rating:
                 <div class="progress">
-                  <div class="progress-bar <%= movie[:tomatometer] >= 60 ? "progress-bar-danger" : "progress-bar-success" %>" role="progressbar" aria-valuenow="<%= movie[:tomatometer] %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie[:tomatometer] %>%"><%= movie[:tomatometer] %>%
+                  <div class="progress-bar <%= movie[:tomatometer].to_i >= 60 ? "progress-bar-danger" : "progress-bar-success" %>" role="progressbar" aria-valuenow="<%= movie[:tomatometer] %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= movie[:tomatometer] %>%"><%= movie[:tomatometer] %>%
                   </div>
                 </div>
                 Upcoming Showtimes:
