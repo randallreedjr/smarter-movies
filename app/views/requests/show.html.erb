@@ -11,11 +11,11 @@ $(document).ready(function() {
   $( '.movie-title' ).on( 'click', function() {
     var title = $( this ).text().split(' ').join('+');
     var that = $( this );
-    if ( !$( this ).has('span').length ) {
+    if ( !$( this ).has('a').length ) {
       $.get( "https://www.googleapis.com/youtube/v3/search?part=snippet&order=rating&q=" + title + "+Official+Trailer&type=video&videoDefinition=high&videoEmbeddable=true&key=<%= ENV['YOUTUBE_API_KEY'] %>", function(data) {
-
         var slug = data.items[0].id.videoId;
-        that.append('<br><a href="https://www.youtube.com/watch?v=' + slug + '" target="_blank">Want to see the trailer?</a>')
+
+        that.append('<br><a href="https://www.youtube.com/watch?v=' + slug + '" target="_blank">Want to see the trailer?</a>');
       });
     }
   });
