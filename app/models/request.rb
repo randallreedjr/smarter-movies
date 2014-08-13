@@ -119,7 +119,6 @@ class Request < ActiveRecord::Base
     movie_url += "startDate=#{Date.today.strftime("%Y-%m-%d")}&numDays=1&"
     movie_url += "lat=#{latitude}&lng=#{longitude}&radius=#{radius/1000}&units=km&"
     movie_url += "api_key=#{ENV['TMS_API_KEY']}"
-    
     return JSON.load(open(movie_url))
   end
 
