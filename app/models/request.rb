@@ -13,14 +13,15 @@ class Request < ActiveRecord::Base
     if self.query_address.strip == ""
       self.formatted_address = Geocoder::address(ip)
       self.latitude, self.longitude = Geocoder::coordinates(ip)
+      self.zip_code = Geocoder.search(ip).first.data["zipcode"]
     else
       address = self.query_address.gsub(" ","+")
       url = "http://maps.google.com/maps/api/geocode/json?address=#{address}&sensor=false"
       results = JSON.load(open(url))["results"][0]
-
       self.formatted_address = results["formatted_address"]
       self.latitude =  results["geometry"]["location"]["lat"]
       self.longitude = results["geometry"]["location"]["lng"]
+      self.zip_code = results["address_components"].select {|record| record["types"] == ["postal_code"]}.first["short_name"]
     end
     #8km, ~5mi
     self.radius = 8000
