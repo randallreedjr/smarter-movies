@@ -18,15 +18,12 @@ class RequestsController < ApplicationController
     @request.geocode
     
     today = Time.now.strftime('%Y-%m-%d')
-    matching_requests = Request.where("zip_code = ? AND created_at > ?", "10004","2014-08-18")
-    binding.pry
-    if matching_requests.any?
-      @request = matching_requests.first
-    else
+    matching_requests = Request.where("zip_code = ? AND created_at > ?", @request.zip_code,today)
+    if !@request = matching_requests.first
       @request.save
       @request.make_theaters
     end
-    binding.pry
+    
     current_time = Time.now.strftime("%Y-%m-%dT%H:%M:%S")
     theaters_with_showtimes = @request.theaters.select do |theater|
       theater.movies.distinct.count > 3 && theater.showtimes.where("time > ?", current_time).count >= 6
