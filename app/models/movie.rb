@@ -7,7 +7,7 @@ class Movie < ActiveRecord::Base
   end
 
   def self.build_movies
-    if !any? || last.created_at < Chronic.parse('last thursday')
+    #if !any? || last.created_at < Chronic.parse('last thursday')
       Movie.destroy_all
       movies = []
       3.times do |i|
@@ -18,7 +18,7 @@ class Movie < ActiveRecord::Base
         this_movie.tomatometer = movie["ratings"]["critics_score"]
         this_movie.save
       end
-    end
+    #end
   end
 
   def self.currently_playing_RT_API(page)

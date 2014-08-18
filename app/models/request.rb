@@ -1,7 +1,3 @@
-require 'open-uri'
-require 'json'
-require 'pry'
-
 class Request < ActiveRecord::Base
   has_many :request_theaters
   has_many :theaters, through: :request_theaters
@@ -32,7 +28,6 @@ class Request < ActiveRecord::Base
 
   def make_theaters()
     theaters = call_google_API()
-    # binding.pry
     if theaters["next_page_token"]
       theaters["results"] += call_google_API(theaters["next_page_token"])["results"]
     end
@@ -74,8 +69,7 @@ class Request < ActiveRecord::Base
   end
 
   def make_movies()
-
-    Movie.build_movies
+    #Movie.build_movies
     movies = call_TMS_API()
     movies.each do |movie|
       three_d = false
