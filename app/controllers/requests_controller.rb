@@ -19,9 +19,11 @@ class RequestsController < ApplicationController
     
     today = Time.now.strftime('%Y-%m-%d')
     matching_requests = Request.where("zip_code = ? AND created_at > ?", @request.zip_code,today)
-    if !@request = matching_requests.first
+    if matching_requests.empty?
       @request.save
       @request.make_theaters
+    else
+      @request = matching_requests.first
     end
     
     current_time = Time.now.strftime("%Y-%m-%dT%H:%M:%S")
